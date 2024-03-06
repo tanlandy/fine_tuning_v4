@@ -17,10 +17,10 @@ The Trainer class, to easily train a 🤗 Transformers from scratch or finetune 
 """
 import os
 from typing import Optional
-from transformers import Trainer
-from peft import PeftModel
 
 import torch
+from peft import PeftModel
+from transformers import Trainer
 from transformers.modeling_utils import PreTrainedModel, unwrap_model
 from transformers.utils import logging
 
@@ -43,13 +43,19 @@ class QLoRATrainer(Trainer):
         logger.info(f"Saving model checkpoint to {output_dir}")
         # Save a trained model and configuration using `save_pretrained()`.
         # They can then be reloaded using `from_pretrained()`
-        if not isinstance(self.model, PreTrainedModel) and not isinstance(self.model, PeftModel):
+        if not isinstance(self.model, PreTrainedModel) and not isinstance(
+            self.model, PeftModel
+        ):
             if isinstance(unwrap_model(self.model), PreTrainedModel):
                 if state_dict is None:
                     state_dict = self.model.state_dict()
-                unwrap_model(self.model).save_pretrained(output_dir, state_dict=state_dict)
+                unwrap_model(self.model).save_pretrained(
+                    output_dir, state_dict=state_dict
+                )
             else:
-                logger.info("Trainer.model is not a `PreTrainedModel`, only saving its state dict.")
+                logger.info(
+                    "Trainer.model is not a `PreTrainedModel`, only saving its state dict."
+                )
                 if state_dict is None:
                     state_dict = self.model.state_dict()
                 torch.save(state_dict, os.path.join(output_dir, WEIGHTS_NAME))

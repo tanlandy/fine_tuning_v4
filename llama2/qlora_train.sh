@@ -10,7 +10,8 @@ RUN_NAME=hotel_qlora
 OUTPUT_DIR=output/${RUN_NAME}-${DATESTR}
 mkdir -p $OUTPUT_DIR
 
-DATA_FS="/root/autodl-tmp"
+DATA_FS="/opt/models"
+LOG_STEPS=30
 
 LOCAL_RANK=-1 CUDA_VISIBLE_DEVICES=0 python main_qlora.py \
     --do_train \
@@ -29,11 +30,11 @@ LOCAL_RANK=-1 CUDA_VISIBLE_DEVICES=0 python main_qlora.py \
     --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 4 \
     --evaluation_strategy steps \
-    --eval_steps 300 \
+    --eval_steps ${LOG_STEPS} \
     --num_train_epochs 1 \
-    --logging_steps 300 \
+    --logging_steps ${LOG_STEPS} \
     --logging_dir $OUTPUT_DIR/logs \
-    --save_steps 300 \
+    --save_steps ${LOG_STEPS} \
     --learning_rate $LR \
     --lora_rank $LORA_RANK \
     --lora_alpha 32 \

@@ -1,5 +1,3 @@
-import sys
-import json
 from prompt_helper import build_prompt, build_response
 
 class Preprocessor:
